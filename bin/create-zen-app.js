@@ -1,4 +1,4 @@
-const { execSync, exec, spawnSync } = require('child_process');
+const { execSync, exec, spawnSync, spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -13,7 +13,7 @@ const GIT_REPO_URL = "https://github.com/fatihgozenc/create-zen-app";
 main();
 
 async function main() {
-    // checkDir();
+    checkDir();
     try {
         console.log('Checking package managers...');
         const yarn = await execute("yarn --version");
@@ -21,27 +21,24 @@ async function main() {
         const hasYarn = yarn.match(isVersion).pop();
         const npm = await execute("npm --version");
         const hasNpm = npm.match(isVersion).pop();
-
+        if(!hasNpm) {
+            throw ("You need to install NPM or Yarn for package installs.");
+        }
         console.log('Downloading files...');
         execSync(`git clone --depth 1 ${GIT_REPO_URL} ${projectPath}`);
-
         process.chdir(projectPath);
-
-        const { stdout } = execSync('yarn -version');
-        const v = spawnSync("yarn -version");
-
         console.log('Installing dependencies...');
-        execSync(hasYarn ? 'yarn' : "npm install");
-
-        console.log(`Removing useless files`);
-        //   execSync('npx rimraf ./.git');
-        deleteFolderRecursive("./.git");
-        fs.rmdirSync(path.join(projectPath, 'bin'), { recursive: true });
-
-        console.log('The installation is done, this is ready to use !');
-
+        const installer = spawn(hasYarn ? 'yarn' : "npm install", { stdio: 'inherit' });
+        installer.on("exit", () => {
+            console.log("Dependencies installed.");
+            console.log(`Clearing leftovers...`);
+            deleteFolderRecursive("./.git");
+            fs.rmSync(path.join(projectPath, 'bin'), { recursive: true, force: true });
+            console.log('Installation is done, ready to zen!');
+        });
     } catch(error) {
         console.log(error);
+        process.exist(1);
     }
 }
 
@@ -54,10 +51,10 @@ function deleteFolderRecursive(path) {
             if(fs.lstatSync(curPath).isDirectory()) { // recurse
                 deleteFolderRecursive(curPath);
             } else { // delete file
-                fs.unlinkSync(curPath);
+                fs.rmSync(curPath);
             }
         });
-        fs.rmdirSync(path);
+        fs.rmSync(path, { recursive: true, force: true });
     }
 };
 
