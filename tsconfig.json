@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "outDir": "./build",
+      "moduleResolution": "node",
+      "target": "es5",
+      "module": "es6",
+      "jsx": "react",
+      "allowJs": true,
+      "noImplicitAny": true,
+      "allowSyntheticDefaultImports": true
+    }
+  }

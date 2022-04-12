@@ -1,0 +1,26 @@
+{
+    "name": "create-zen-app",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "bin": {
+        "create-zen-app": "./bin/create-zen-app.js"
+    },
+    "scripts": {
+        "build": "yarn zen-react-scripts build",
+        "dev": "yarn zen-react-scripts dev",
+        "local": "yarn zen-react-scripts local"
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.17.9",
+        "preact": "^10.7.1",
+        "react-router-dom": "^6.3.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.1",
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0",
+        "zen-react-scripts": "https://github.com/fatihgozenc/zen-react-scripts"
+    },
+    "browserslist": "edge >= 13, firefox >= 50, and_ff >= 50, chrome >= 49, and_chr >= 49, ios >= 9.4, safari >= 9.4, samsung >= 5, and_uc >= 11.8, opera >= 40, op_mob >= 40, baidu >= 7"
+}
